@@ -3,32 +3,41 @@
 var express = require('express');
 var routes = express.Router();
 
-var myObject = {
-	mytekst: 'Hello world!'
-};
+var names = [];
 
-routes.get('/hello', function(req, res){
-	res.contentType('application/json');
-	res.status(200);
-	res.json(myObject);
-});
 
-routes.post('/hello', function(req, res){
+routes.post('/post', function(req, res){
 	var body = req.body;
 	
-	console.dir(body);
+	names.push(req.body.Name);
 	
 	res.contentType('application/json');
 	res.status(200);
-	res.json(myObject);
+	res.json(names);
+});
+
+routes.delete('/delete', function(req, res){
+	var body = req.body;
+	var index = names.indexOf(req.body.Name);
+	
+	if(index > -1){
+		names.splice(index, 1);
+		res.contentType('application/json');
+		res.status(200);
+		res.json(names);
+	}else{
+		res.contentType('application/json');
+		res.status(202);
+		res.json({"Ërror" : "Name was not found"});
+	}
 });
 
 
 
-routes.get('/goodbye', function(req, res){
+routes.get('/get', function(req, res){
 	res.contentType('application/json');
 	res.status(200);
-	res.json({ 'tekst': 'Goodbye!'});
+	res.json(names);
 });
 
 module.exports = routes;

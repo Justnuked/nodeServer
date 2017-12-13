@@ -11,33 +11,35 @@ routes.post('/post', function(req, res){
 	
 	names.push(req.body.Name);
 	
-	res.contentType('application/json');
 	res.status(200);
 	res.json(names);
 });
 
-routes.delete('/delete', function(req, res){
+routes.delete('/delete', function(req, res, next){
 	var body = req.body;
 	var index = names.indexOf(req.body.Name);
+	console.log("delete called");
 	
 	if(index > -1){
 		names.splice(index, 1);
-		res.contentType('application/json');
 		res.status(200);
 		res.json(names);
 	}else{
-		res.contentType('application/json');
 		res.status(202);
-		res.json({"Ërror" : "Name was not found"});
+		next("Something went wrong =(");
 	}
 });
 
 
-
 routes.get('/get', function(req, res){
-	res.contentType('application/json');
 	res.status(200);
 	res.json(names);
 });
+
+routes.get('*', function (req, res){
+	res.status(404);
+	res.json({"Error" : "Dead end"}).end();
+});
+
 
 module.exports = routes;
